@@ -1,7 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Log in to Swag Labs', () => {
-  
+
+  // get user and password from env variables
+  const username = process.env.PLAYWRIGHT_USERNAME;
+  const password = process.env.PLAYWRIGHT_PASSWORD;
+
+  // ensure that username and password are defined
+  expect(username).not.toBe(undefined);
+  expect(password).not.toBe(undefined);
+
   test.beforeEach(async ({ page }) => {
     await page.goto('https://www.saucedemo.com/');
     await expect(page).toHaveTitle(/Swag Labs/);
@@ -12,8 +20,8 @@ test.describe('Log in to Swag Labs', () => {
   });
 
   test('login using valid credentials', async ({ page }) => {  
-    await page.getByPlaceholder('Username').fill('standard_user');
-    await page.getByPlaceholder('Password').fill('secret_sauce');
+    await page.getByPlaceholder('Username').fill(username!);
+    await page.getByPlaceholder('Password').fill(password!);
     await page.getByRole('button', { name: 'Login' }).click();
     await expect(page.getByText('Products')).toBeVisible();
   });
